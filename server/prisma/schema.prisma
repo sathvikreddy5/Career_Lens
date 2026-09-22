@@ -1,0 +1,149 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "esm"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// =====================================================
+// USER
+// =====================================================
+
+model User {
+  id           String @id @default(cuid())
+  name         String
+  email        String @unique
+  passwordHash String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  careerProfile       CareerProfile?
+  opportunityPostings OpportunityPosting[]
+practiceProgress PracticeProgress[]
+}
+
+// =====================================================
+// CAREER PROFILE
+// =====================================================
+
+model CareerProfile {
+  id     String @id @default(cuid())
+  userId String @unique
+
+  // Education
+  college String?
+  branch  String?
+  year    String?
+
+  // Career goal
+  targetRole String?
+  domain     String?
+
+  // Current skills
+  skills String[]
+
+  // Professional profiles
+  githubUrl   String?
+  linkedinUrl String?
+  leetcodeUrl String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skillAssessments SkillAssessment[]
+}
+
+// =====================================================
+// SKILL ASSESSMENT
+// =====================================================
+
+model SkillAssessment {
+  id              String @id @default(cuid())
+  careerProfileId String
+
+  // Skill information
+  skillId   String
+  skillName String
+  category  String
+
+  // 1 = Beginner, 5 = Advanced
+  level Int
+
+  // Critical / High / Medium / Low
+  priority String
+
+  updatedAt DateTime @updatedAt
+
+  // Relationship
+  careerProfile CareerProfile @relation(fields: [careerProfileId], references: [id], onDelete: Cascade)
+
+  @@unique([careerProfileId, skillId])
+  @@index([careerProfileId])
+}
+
+// =====================================================
+// OPPORTUNITY POSTING
+// =====================================================
+
+model OpportunityPosting {
+  id     String @id @default(cuid())
+  userId String
+
+  // Opportunity information
+  companyName  String?
+  contactEmail String?
+  description  String
+
+  // Safety analysis
+  riskScore Int?
+  badge     String?
+
+  // Duplicate / similarity detection
+  duplicateClusterSize Int @default(1)
+
+  // Detailed analysis results
+  analysisDetails Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationship
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+// =====================================================
+// PRACTICE PROGRESS
+// =====================================================
+
+model PracticeProgress {
+  id String @id @default(cuid())
+
+  userId String
+
+  // Practice task information
+  skillId   String
+  taskIndex Int
+
+  // Completion state
+  completed   Boolean  @default(false)
+  completedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationship
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, skillId, taskIndex])
+  @@index([userId])
+  @@index([skillId])
+}

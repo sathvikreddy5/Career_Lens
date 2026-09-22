@@ -6,7 +6,7 @@
   "main": "src/server.js",
   "scripts": {
     "dev": "tsx watch src/server.js",
-    "start": "tsx src/server.js",
+    "start": "node src/server.js",
     "generate": "prisma generate",
     "migrate": "prisma migrate dev",
     "studio": "prisma studio"

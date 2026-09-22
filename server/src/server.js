@@ -91,6 +91,6 @@ app.use((req, res) => {
 // Server
 // -----------------------------
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Career Lens server running on port ${PORT}`);
 });

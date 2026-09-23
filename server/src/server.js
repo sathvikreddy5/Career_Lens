@@ -12,7 +12,6 @@ import aiRoutes from "./routes/aiRoutes.js";
 import practiceRoutes from "./routes/practiceRoutes.js";
 
 const app = express();
-
 const PORT = process.env.PORT || 5000;
 
 // -----------------------------

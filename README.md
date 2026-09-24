@@ -41,7 +41,7 @@ Evaluate Career Opportunities
  Career Lens AI
 
 Key Features
-🎯 Career Readiness
+ Career Readiness
 
 Students can create their career profile and select their target role.
 

@@ -66,10 +66,6 @@ export const analyzeOpportunity = async (req, res) => {
       take: 500,
     });
 
-    // ==================================================
-    // DUPLICATE JOB DESCRIPTION DETECTION
-    // ==================================================
-
     const duplicateResult = detectDuplicates(description, previousPostings);
 
     // ==================================================
@@ -109,32 +105,24 @@ export const analyzeOpportunity = async (req, res) => {
       contactEmail,
       companyName,
       companyDomain,
-
       // ----------------------------------------------
       // Email domain
       // ----------------------------------------------
-
       contactDomain: companyVerification.contactDomain,
-
       // ----------------------------------------------
       // Duplicate detection
       // ----------------------------------------------
-
       duplicateClusterSize: duplicateResult.clusterSize,
-
       // ----------------------------------------------
       // Domain age
       // ----------------------------------------------
-
       domainAgeDays:
         companyVerification.domainIntelligence?.domainAge?.ageDays ??
         domainAgeDays ??
         null,
-
       // ----------------------------------------------
       // Community reports
       // ----------------------------------------------
-
       weightedReports,
 
       // ----------------------------------------------

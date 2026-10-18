@@ -13,7 +13,6 @@ import { extractTextFromImage } from "../services/ocrService.js"; // ===========
 export const analyzeOpportunityPost = async (req, res) => {
   try {
     let { companyName = "", contactEmail = "", description = "" } = req.body;
-
     let extractedText = "";
 
     // ----------------------------------------------------------
@@ -25,7 +24,6 @@ export const analyzeOpportunityPost = async (req, res) => {
         extractedText = await extractTextFromImage(req.file.buffer);
       } catch (ocrError) {
         console.error("OCR error:", ocrError);
-
         return res.status(400).json({
           message:
             "Unable to read text from the uploaded image. Please try a clearer image.",
@@ -73,36 +71,22 @@ export const analyzeOpportunityPost = async (req, res) => {
     const opportunity = await prisma.opportunityPosting.create({
       data: {
         userId: req.user.userId,
-
         companyName: companyName.trim() || null,
-
         contactEmail: contactEmail.trim() || null,
-
         description: description.trim(),
-
         riskScore: analysis.riskScore,
-
         badge: analysis.badge,
 
         analysisDetails: {
           riskLevel: analysis.riskLevel,
-
           badge: analysis.badge,
-
           summary: analysis.summary,
-
           redFlags: analysis.redFlags,
-
           detectedSignals: analysis.detectedSignals,
-
           informationalSignals: analysis.informationalSignals,
-
           recommendations: analysis.recommendations,
-
           analyzedAt: analysis.analyzedAt,
-
           source: req.file ? "image" : "text",
-
           extractedText: req.file ? extractedText : null,
         },
       },

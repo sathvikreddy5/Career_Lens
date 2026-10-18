@@ -1,7 +1,5 @@
 import bcrypt from "bcryptjs";
-
 import jwt from "jsonwebtoken";
-
 import prisma from "../config/prisma.js";
 
 // =====================================================
@@ -11,11 +9,9 @@ import prisma from "../config/prisma.js";
 export const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
-
     // -----------------------------
     // Validation
     // -----------------------------
-
     if (!name || !email || !password) {
       return res.status(400).json({
         message: "Name, email and password are required.",
@@ -29,11 +25,9 @@ export const register = async (req, res) => {
     }
 
     const normalizedEmail = email.trim().toLowerCase();
-
     // -----------------------------
     // Check existing user
     // -----------------------------
-
     const existingUser = await prisma.user.findUnique({
       where: {
         email: normalizedEmail,
@@ -49,9 +43,7 @@ export const register = async (req, res) => {
     // -----------------------------
     // Hash password
     // -----------------------------
-
     const passwordHash = await bcrypt.hash(password, 10);
-
     // -----------------------------
     // Create user
     // -----------------------------
@@ -59,9 +51,7 @@ export const register = async (req, res) => {
     const user = await prisma.user.create({
       data: {
         name: name.trim(),
-
         email: normalizedEmail,
-
         passwordHash,
       },
     });
@@ -72,12 +62,9 @@ export const register = async (req, res) => {
 
     return res.status(201).json({
       message: "Account created successfully.",
-
       user: {
         id: user.id,
-
         name: user.name,
-
         email: user.email,
       },
     });
@@ -97,11 +84,9 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-
-    // -----------------------------
+    // ----------------------------
     // Validation
     // -----------------------------
-
     if (!email || !password) {
       return res.status(400).json({
         message: "Email and password are required.",

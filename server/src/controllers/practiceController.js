@@ -31,14 +31,12 @@ export const getPractice = async (req, res) => {
     }
 
     const readiness = calculateReadiness(profile);
-
     const skillsToWorkOn = [
       ...(readiness.missingSkills || []),
       ...(readiness.developingSkills || []),
     ];
 
     const practice = getPracticeForSkills(skillsToWorkOn);
-
     return res.json({
       targetRole: readiness.targetRole,
       practice,

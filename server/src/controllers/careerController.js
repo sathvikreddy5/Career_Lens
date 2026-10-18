@@ -1,5 +1,4 @@
 import prisma from "../config/prisma.js";
-
 import { roleRequirements } from "../data/roleRequirements.js";
 import { generateRoadmap } from "../services/roadmapService.js";
 import { calculateReadiness } from "../services/careerReadinessService.js";
@@ -49,7 +48,6 @@ export const getMyAssessment = async (req, res) => {
     }
 
     const assessments = profile.skillAssessments || [];
-
     /*
      * Calculate readiness from the student's
      * selected skills/profile.
@@ -59,7 +57,6 @@ export const getMyAssessment = async (req, res) => {
     try {
       if (profile.targetRole) {
         const result = calculateReadiness(profile);
-
         readiness = result.readiness;
       }
     } catch (error) {
@@ -69,10 +66,8 @@ export const getMyAssessment = async (req, res) => {
     return res.status(200).json({
       profile: {
         ...profile,
-
         // Keep frontend-compatible name
         assessments,
-
         readiness,
       },
     });
@@ -92,7 +87,6 @@ export const getMyAssessment = async (req, res) => {
 export const saveAssessment = async (req, res) => {
   try {
     const userId = req.user.userId;
-
     const { targetRole, assessments } = req.body;
 
     // --------------------------------------------------
@@ -165,11 +159,8 @@ export const saveAssessment = async (req, res) => {
       profile = await prisma.careerProfile.create({
         data: {
           userId,
-
           targetRole: roleKey,
-
           domain: roleRequirements[roleKey].category,
-
           skills: assessments
             .filter((item) => Number(item.level || 0) > 0)
             .map((item) => item.skillName),
